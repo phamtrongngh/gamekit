@@ -42,11 +42,30 @@ Do not skip analysis and verification. They prevent visual guesses from becoming
 | Add HUD/gameplay overlay | `godot-ui-hud-overlay` |
 | Add camera/lighting/parallax/VFX | `godot-camera-lighting-vfx` |
 | Verify implementation | `godot-scene-verification` |
-| Create/modify Godot scenes via tools | `godot-engine-tools` |
+| Create/modify/run Godot projects | Godot MCP tools, or `godot-engine-tools` if available |
 | Write 2D GDScript/gameplay code | `godot-2d-expert` |
 | Analyze individual image assets | `game-asset-analyzer` |
+| Generate or edit missing bitmap assets | `imagegen` |
 
 For a pure menu/full UI screenshot, `godot-ui-from-screenshot` can be used as the specialized UI branch.
+
+## Tooling Backends
+
+When Godot MCP tools are available in the project, prefer them for:
+- getting the Godot version and project info
+- listing/discovering projects
+- creating scenes
+- adding nodes
+- loading sprites/textures
+- saving scenes
+- running the project
+- capturing debug output
+- stopping the project
+- updating UIDs for Godot 4.4+ projects
+
+Use bundled CLI helpers or ordinary shell/Godot commands only when MCP tools are unavailable or insufficient. Keep the workflow portable: never assume every project has MCP configured.
+
+When a missing visual asset should be created as a bitmap, use the `imagegen` skill. It is appropriate for sprites, textures, background plates, props, concept variants, transparent cutouts, and UI mockups. Do not use image generation for simple Godot-native shapes, deterministic UI controls, vector/SVG assets, or placeholders that are better built directly in code.
 
 ## Phase 1: Analyze
 
@@ -84,6 +103,7 @@ Rules:
 - Use placeholders for playable prototypes.
 - Crop only clean static elements.
 - Generate raster assets only when they materially improve the scene.
+- Use `imagegen` for generated raster assets, then save the final selected asset inside the Godot project before referencing it.
 - Use `game-asset-analyzer` for any asset needing precise offsets, collision, or attachment points.
 
 ## Phase 4: Compose Scene
@@ -97,7 +117,7 @@ Route by scene type:
 | UI-only screen | `godot-ui-from-screenshot` |
 | Gameplay plus HUD | 2D/3D composition + `godot-ui-hud-overlay` |
 
-Use `godot-engine-tools` for scene and node operations instead of manually writing `.tscn` files.
+Use Godot MCP tools, or `godot-engine-tools` if available, for scene and node operations instead of manually writing `.tscn` files.
 
 ## Phase 5: Add Gameplay Elements
 

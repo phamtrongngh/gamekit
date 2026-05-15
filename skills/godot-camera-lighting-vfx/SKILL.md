@@ -69,6 +69,8 @@ In prototypes, prioritize clear silhouettes and navigable space.
 | wind/rain/snow | screen/world particles |
 | damage feedback | flash material/modulate + shake |
 
+Use `imagegen` only for bitmap VFX source art, texture plates, background plates, or concept references that cannot be made cleanly with Godot particles, lights, shaders, primitives, or existing assets.
+
 ## Camera Shake
 
 Use small, event-driven shake. Do not shake continuously unless the scene calls for it.

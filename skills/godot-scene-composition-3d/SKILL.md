@@ -8,7 +8,7 @@ description: >
 
 Create a practical 3D scene from a reference. Start with a readable blockout unless production models already exist.
 
-Use `godot-engine-tools` for scene/node automation. Use Godot primitives and simple materials before custom meshes when the goal is prototype or structure.
+Use Godot MCP tools for scene/node automation, project runs, debug output, and MeshLibrary export when they are available. Fall back to `godot-engine-tools` or local Godot CLI helpers when MCP is unavailable. Use Godot primitives and simple materials before custom meshes when the goal is prototype or structure.
 
 ## Standard Scene Tree
 
@@ -84,6 +84,7 @@ For playable 3D scenes:
 If no models exist:
 - Use colored primitives for blockout.
 - Use generated textures sparingly.
+- Use `imagegen` only when a generated bitmap texture or concept plate materially improves the scene.
 - Do not create complex mesh assets by hand in scene files.
 - Ask for source models only when the requested quality depends on them.
 

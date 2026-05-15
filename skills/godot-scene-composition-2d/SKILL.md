@@ -8,7 +8,7 @@ description: >
 
 Compose a playable 2D Godot scene from a plan. This skill focuses on world assembly, not detailed actor scripts.
 
-Use `godot-engine-tools` for creating scenes and nodes. Use `godot-2d-expert` when writing GDScript.
+Use Godot MCP tools for creating scenes, adding nodes, loading sprites, saving scenes, and running the project when they are available. Fall back to `godot-engine-tools` or local Godot CLI helpers when MCP is unavailable. Use `godot-2d-expert` when writing GDScript if that skill is available.
 
 ## Standard Scene Tree
 

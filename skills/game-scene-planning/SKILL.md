@@ -18,6 +18,12 @@ Before planning, determine:
 - Deliverable: visual blockout, playable prototype, production scene, or scene refactor.
 - Existing scenes/scripts/assets that should be reused.
 
+## Tooling Assumptions
+
+When Godot MCP tools are configured, prefer them for project inspection, scene creation, node creation, sprite loading, running the project, capturing debug output, stopping execution, and UID maintenance. If MCP tools are unavailable, use the project's bundled CLI helpers or Godot/headless shell commands.
+
+Treat MCP as an automation backend, not a hard dependency of the skill. The plan should still be executable in a project that only has local Godot CLI access.
+
 ## Planning Output
 
 Always output:
@@ -155,4 +161,4 @@ Use `godot-camera-lighting-vfx` for scene mood, framing, parallax, camera follow
 7. Wire signals and scene transitions.
 8. Run verification.
 
-Use `godot-engine-tools` for scene/node automation and `godot-2d-expert` for GDScript patterns.
+Use Godot MCP tools or `godot-engine-tools` for scene/node automation when available. Use `godot-2d-expert` for GDScript patterns when that skill is available.

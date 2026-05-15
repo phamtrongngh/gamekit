@@ -29,6 +29,24 @@ Strategies:
 | generate_raster | A new bitmap asset is needed and no source exists |
 | request_source | Pixel-perfect result needs original layered art or model |
 
+## Image Generation Backend
+
+When the strategy is `generate_raster`, use the `imagegen` skill to generate or edit bitmap assets. Good use cases:
+- sprite placeholders that should look closer to the reference than simple shapes
+- background plates
+- terrain or prop textures
+- icons and UI mockups
+- transparent-background cutouts
+- concept variants for characters, enemies, props, and VFX
+
+Do not use `imagegen` when the asset is better handled as:
+- a simple Godot-native primitive or UI control
+- an SVG/vector asset
+- a deterministic icon matching an existing vector/icon system
+- an original source asset needed for pixel-perfect recreation
+
+Generated assets are useful for prototypes and missing art, but they are not a substitute for original layered files, animation sheets, models, or source art when exact reproduction matters.
+
 ## Repository Search First
 
 Before creating assets, search the project:
@@ -124,6 +142,12 @@ Avoid:
 ```
 
 Generate only the assets needed to make the scene useful. Avoid generating an entire asset set when a blockout is enough.
+
+After generation:
+- Save the selected final asset inside the Godot project before referencing it.
+- Use lowercase snake_case filenames.
+- For transparent sprites/cutouts, prefer PNG.
+- Run `game-asset-analyzer` when the generated asset needs collision, origin, attachment, or placement metadata.
 
 ## Import And Godot Notes
 

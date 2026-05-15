@@ -8,7 +8,7 @@ description: >
 
 Do not stop after creating files. Run or inspect the scene and report concrete results.
 
-Use `godot-engine-tools` to run projects, capture debug output, stop running instances, inspect project info, and create/modify scenes safely.
+Use Godot MCP tools, or `godot-engine-tools` if available, to run projects, capture debug output, stop running instances, inspect project info, and create/modify scenes safely. If neither is available, use the local Godot CLI/headless workflow and report any verification limits.
 
 ## Verification Report
 
@@ -76,12 +76,12 @@ For scene-from-reference tasks:
 
 ## Debug Workflow
 
-1. Run the project or target scene.
-2. Capture debug output.
+1. Prefer Godot MCP `run_project` for project execution when available.
+2. Capture debug output with MCP or the available local tool.
 3. Fix fatal errors first.
 4. Fix missing resources and broken node paths.
 5. Verify interactions manually or with a minimal test scene.
-6. Stop the running project.
+6. Stop the running project with MCP/local tooling.
 
 If a GUI/editor step is required and unavailable, state the limitation and verify what can be verified headlessly.
 

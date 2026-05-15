@@ -82,6 +82,7 @@ From screenshots:
 - Capture visible HUD positions, colors, icon count, labels, and hierarchy.
 - Infer data only when conventional: hearts = health, coins = currency, timer = countdown/countup.
 - If exact icons are unavailable, use placeholders or existing project assets.
+- Use `imagegen` for missing bitmap HUD icons, portraits, badges, or UI mockup pieces only when Godot-native controls or existing vector assets are not a better fit.
 - If the screenshot is mostly UI, use `godot-ui-from-screenshot` for deeper full-screen UI reconstruction.
 
 ## Checklist
