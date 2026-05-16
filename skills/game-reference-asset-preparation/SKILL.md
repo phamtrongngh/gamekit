@@ -8,6 +8,8 @@ description: >
 
 Decide how each visible reference element should become a Godot asset or placeholder. Use this after `game-reference-analysis` and before scene composition.
 
+If the user wants to split a flattened screenshot into background/logo/buttons/icons/decorations, use `game-reference-layer-extraction` before finalizing this asset table. A screenshot is not a layered source file, so the asset strategy must explicitly separate clean crops, approximate candidates, generated replacements, and items that should remain baked into the background.
+
 ## Asset Strategy Table
 
 Create this table:
@@ -28,6 +30,22 @@ Strategies:
 | placeholder | Gameplay needs the role, but exact art is not required yet |
 | generate_raster | A new bitmap asset is needed and no source exists |
 | request_source | Pixel-perfect result needs original layered art or model |
+
+## Approval Required For Flattened References
+
+Do not extract or generate assets from a flat reference image and immediately build a scene unless the user explicitly approved that end-to-end flow.
+
+Use this stop-and-confirm sequence:
+
+1. **Asset plan approval:** show the asset table with confidence for each proposed crop/generation. Ask the user to confirm names, grouping, and whether complex decorations should be separate assets or baked into the background.
+2. **Extraction approval:** after running `game-reference-layer-extraction`, show the generated contact sheet and known defects. Ask whether the user accepts the assets, wants recrops, wants generated replacements, or wants to request source art.
+3. **Build approval:** only after assets are accepted, map assets to Godot nodes and ask for approval before composing the final scene.
+
+When asking, be specific. Good examples:
+
+- "Logo crop keeps some purple glow/background. Approve it, recrop wider/tighter, or generate a clean logo?"
+- "The empty button candidate has blurred text remnants. Use it as temporary art, regenerate a clean button, or rebuild the button natively in Godot?"
+- "Bottom decorations are complex and non-interactive. Keep them baked into background, or split them into separate props?"
 
 ## Image Generation Backend
 
@@ -96,6 +114,12 @@ Do not crop:
 - Low-quality screenshot details that will become blurry.
 
 When cropping from a screenshot, keep transparent padding minimal and document the intended origin.
+
+For UI/menu screenshots:
+- Prefer cropping decorative frames separately from text labels when the text must be dynamic/localized.
+- Treat "empty button" crops made by erasing text as candidates. They need user approval because one-image text removal can leave blur, color smears, or missing bevel detail.
+- Use `crop_with_alpha_candidate` only when background contrast makes the alpha edge plausible. Otherwise keep the crop rectangular or use `generate_raster`.
+- Do not split small decorative gems/glints into separate files unless they will animate, move independently, or be reused.
 
 ## Asset Metadata
 

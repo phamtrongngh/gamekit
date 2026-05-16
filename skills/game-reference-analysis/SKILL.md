@@ -34,6 +34,9 @@ Terrain and collision candidates:
 UI/HUD overlay:
 | element | position | content | notes |
 
+Layer/asset candidates:
+| asset | proposed strategy | approximate region | confidence | user confirmation needed |
+
 Color and lighting:
 Typography:
 Motion implied by image:
@@ -129,13 +132,26 @@ Do not recommend extracting stylized text as a raster logo unless the user expli
 
 When marking an item as `generated asset`, note whether it should use `imagegen` and whether it needs transparency, animation frames, tiling, or later `game-asset-analyzer` metadata.
 
+### 7. Flag Layer Extraction Uncertainty
+
+For flattened screenshots, identify what can and cannot be separated cleanly:
+
+- Background plates usually cannot be cleanly recovered behind large UI, logos, or characters from one image.
+- Logos with glows/shadows can be cropped as candidates, but clean transparency may require source art or generation.
+- Button frames with text can be cropped, but making an empty button requires text removal or generation and must be user-reviewed.
+- Complex decorative foreground clusters can often stay baked into the background if they are not interactive.
+
+Always include a `Layer/asset candidates` table for menu, HUD, shop, inventory, title screen, and other UI-heavy references.
+
 ## Questions Policy
 
-Ask only when the answer changes architecture:
+Ask when the answer changes architecture, asset grouping, or visual fidelity:
 
 - 2D or 3D when the image is ambiguous.
 - Player controller type when multiple are plausible.
 - Whether the goal is visual blockout, playable prototype, or close visual recreation.
 - Which existing Godot project/scene path to integrate into if not discoverable.
+- Whether uncertain extracted assets are acceptable, should be regenerated, should be recropped, or should remain baked into the background.
+- Whether source art/layered files exist when the user requires near pixel-perfect output.
 
 If nothing blocks architecture, proceed with reasonable conventions and list assumptions.

@@ -16,7 +16,10 @@ Use it for any image-driven Godot scene, not only UI.
 REFERENCE
   -> ANALYZE
   -> PLAN
-  -> PREPARE ASSETS
+  -> PLAN LAYER EXTRACTION
+  -> GET USER APPROVAL
+  -> PREPARE/EXTRACT ASSETS
+  -> GET USER APPROVAL
   -> COMPOSE SCENE
   -> ADD ACTORS/OBJECTS
   -> ADD COLLISION/NAVIGATION
@@ -32,6 +35,7 @@ Do not skip analysis and verification. They prevent visual guesses from becoming
 | ----------------------------------------- | -------------------------------------------- |
 | Understand screenshot/mockup/concept art  | `game-reference-analysis`                    |
 | Choose scene architecture and build order | `game-scene-planning`                        |
+| Split a flat reference into candidate assets/layers | `game-reference-layer-extraction`            |
 | Reuse/crop/placeholder/generate assets    | `game-reference-asset-preparation`           |
 | Build 2D world scene                      | `godot-scene-composition-2d`                 |
 | Build 3D world scene                      | `godot-scene-composition-3d`                 |
@@ -65,6 +69,18 @@ Use ordinary shell/Godot CLI commands only for operations outside the MCP tool s
 
 When a missing visual asset should be created as a bitmap, use the `imagegen` skill. It is appropriate for sprites, textures, background plates, props, concept variants, transparent cutouts, and UI mockups. Do not use image generation for simple Godot-native shapes, deterministic UI controls, vector/SVG assets, or placeholders that are better built directly in code.
 
+## User Approval Gates
+
+When the user asks for close visual recreation from a reference image and source layers are missing, do not run the entire pipeline in one pass unless the user explicitly says to skip review.
+
+Stop and ask for confirmation at these gates:
+
+1. **After analysis and decomposition:** show the proposed layer/asset list, including background, logo, button frames, icon buttons, score panels, decorations, and anything that should stay baked into the background.
+2. **After asset extraction or generation:** show the contact sheet or asset list, disclose defects such as baked text, background contamination, blur patches, rough alpha, or uncertain crop bounds, then ask whether to recrop, regenerate, merge, or approve.
+3. **Before scene composition:** confirm the approved asset set and which visual elements should be interactive Godot nodes versus baked pixels.
+
+Only continue past a gate after the user approves that gate. If the user asks for speed or explicitly approves assumptions up front, still report which approvals were skipped and why.
+
 ## Phase 1: Analyze
 
 Use `game-reference-analysis` and produce a reference brief with:
@@ -96,14 +112,17 @@ Inspect the existing Godot project before editing. Reuse existing architecture w
 
 ## Phase 3: Prepare Assets
 
-Use `game-reference-asset-preparation`.
+Use `game-reference-asset-preparation`. If assets need to be split from a flattened screenshot, first use `game-reference-layer-extraction`.
 
 Rules:
 
 - Search existing assets first.
+- For menu/UI references, produce an asset decomposition plan before extraction.
+- Ask the user to approve uncertain crop boxes and asset strategies before running extraction.
 - Use placeholders for playable prototypes.
 - Crop only clean static elements.
 - Generate raster assets only when they materially improve the scene.
+- Ask the user to approve extracted/generated assets before referencing them in Godot scenes.
 - Use `imagegen` for generated raster assets, then save the final selected asset inside the Godot project before referencing it.
 - Use `game-asset-analyzer` for any asset needing precise offsets, collision, or attachment points.
 
