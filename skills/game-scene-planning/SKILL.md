@@ -20,9 +20,9 @@ Before planning, determine:
 
 ## Tooling Assumptions
 
-When Godot MCP tools are configured, prefer them for project inspection, scene creation, node creation, sprite loading, running the project, capturing debug output, stopping execution, and UID maintenance. If MCP tools are unavailable, use the project's bundled CLI helpers or Godot/headless shell commands.
+Godot MCP tools from `Coding-Solo/godot-mcp` are expected to be configured in each project. Use them for project inspection, scene creation, node creation, sprite loading, running the project, capturing debug output, stopping execution, and UID maintenance.
 
-Treat MCP as an automation backend, not a hard dependency of the skill. The plan should still be executable in a project that only has local Godot CLI access.
+Treat MCP as the default automation backend. Use local Godot CLI/headless commands only for operations outside the MCP tool surface.
 
 ## Planning Output
 
@@ -161,4 +161,4 @@ Use `godot-camera-lighting-vfx` for scene mood, framing, parallax, camera follow
 7. Wire signals and scene transitions.
 8. Run verification.
 
-Use Godot MCP tools or `godot-engine-tools` for scene/node automation when available. Use `godot-2d-expert` for GDScript patterns when that skill is available.
+Use Godot MCP tools from `Coding-Solo/godot-mcp` for scene/node automation. Use local Godot CLI/headless workflows only for operations outside the MCP tool surface.

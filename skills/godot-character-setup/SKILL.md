@@ -8,8 +8,6 @@ description: >
 
 Build the player character as a reusable scene with clear movement, collision, visuals, and signals. Keep the level scene responsible for placement; keep character behavior inside the character scene.
 
-Use `godot-2d-expert` for detailed 2D GDScript. For 3D, use the same Godot principles: typed GDScript, exported tuning values, and focused scripts.
-
 ## Character Brief
 
 Before implementation, write:

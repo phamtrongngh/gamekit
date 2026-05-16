@@ -8,7 +8,7 @@ description: >
 
 Create a practical 3D scene from a reference. Start with a readable blockout unless production models already exist.
 
-Use Godot MCP tools for scene/node automation, project runs, debug output, and MeshLibrary export when they are available. Fall back to `godot-engine-tools` or local Godot CLI helpers when MCP is unavailable. Use Godot primitives and simple materials before custom meshes when the goal is prototype or structure.
+Use the project-configured Godot MCP server from `Coding-Solo/godot-mcp` for scene/node automation, project runs, debug output, stopping execution, and MeshLibrary export. Use local Godot CLI/headless commands only for operations outside the MCP tool surface. Use Godot primitives and simple materials before custom meshes when the goal is prototype or structure.
 
 ## Standard Scene Tree
 

@@ -1,7 +1,7 @@
 ---
 name: godot-ui-hud-overlay
 description: >
-  Build gameplay HUDs and UI overlays for Godot scenes from screenshots, mockups, reference briefs, or gameplay requirements. Use this skill for health bars, score, timers, minimaps, inventory slots, dialogue boxes, mobile controls, prompts, pause buttons, ammo, ability cooldowns, boss bars, objective text, and any UI layered over an in-game scene. This complements godot-ui-from-screenshot for full UI screens.
+  Build gameplay HUDs and UI overlays for Godot scenes from screenshots, mockups, reference briefs, or gameplay requirements. Use this skill for health bars, score, timers, minimaps, inventory slots, dialogue boxes, mobile controls, prompts, pause buttons, ammo, ability cooldowns, boss bars, objective text, and any UI layered over an in-game scene.
 ---
 
 # Godot UI HUD Overlay
@@ -83,7 +83,6 @@ From screenshots:
 - Infer data only when conventional: hearts = health, coins = currency, timer = countdown/countup.
 - If exact icons are unavailable, use placeholders or existing project assets.
 - Use `imagegen` for missing bitmap HUD icons, portraits, badges, or UI mockup pieces only when Godot-native controls or existing vector assets are not a better fit.
-- If the screenshot is mostly UI, use `godot-ui-from-screenshot` for deeper full-screen UI reconstruction.
 
 ## Checklist
 
