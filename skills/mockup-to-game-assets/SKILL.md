@@ -8,7 +8,7 @@ description: Turn one or more game mockups, UI screenshots, in-game screenshots,
 Use this skill to convert reference images into usable game assets. The default approach is hybrid:
 
 - Crop or slice from the source when an asset is already clean, high resolution, unoccluded, and separable.
-- Recreate with the `game_asset_imagegen` skill when the source is flattened, text-baked, occluded, too low quality, missing alpha, or when a cleaner reusable asset is needed.
+- Recreate with the `game-asset-imagegen` skill when the source is flattened, text-baked, occluded, too low quality, missing alpha, or when a cleaner reusable asset is needed.
 
 Do not promise pixel-perfect extraction from a single flattened screenshot. A screenshot does not contain original layers, hidden pixels, exact fonts, animation frames, or alpha. Produce a practical asset pack with confidence notes and review artifacts.
 
@@ -149,7 +149,7 @@ No text, no labels, no watermark, no cast shadow outside the object.
 Use the bundled slicer for generated sheets and any source screenshot/sheet with known bboxes:
 
 ```bash
-python .agents/skills/mockup-to-game-assets/scripts/slice_sprite_sheet.py \
+python scripts/slice_sprite_sheet.py \
   --sheet <sprite_sheet.png> \
   --manifest <slice_manifest.json> \
   --out-dir <output_dir> \

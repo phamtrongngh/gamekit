@@ -139,7 +139,7 @@ Default sequence:
 4. Run the installed helper:
 
 ```bash
-python "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.py" \
+python "scripts/remove_chroma_key.py" \
   --input <source> \
   --out <final.png> \
   --auto-key border \
