@@ -8,7 +8,7 @@ description: Turn one or more game mockups, UI screenshots, in-game screenshots,
 Use this skill to convert reference images into usable game assets. The default approach is hybrid:
 
 - Crop or slice from the source when an asset is already clean, high resolution, unoccluded, and separable.
-- Recreate with the `imagegen` skill when the source is flattened, text-baked, occluded, too low quality, missing alpha, or when a cleaner reusable asset is needed.
+- Recreate with the `game_asset_imagegen` skill when the source is flattened, text-baked, occluded, too low quality, missing alpha, or when a cleaner reusable asset is needed.
 
 Do not promise pixel-perfect extraction from a single flattened screenshot. A screenshot does not contain original layers, hidden pixels, exact fonts, animation frames, or alpha. Produce a practical asset pack with confidence notes and review artifacts.
 
@@ -35,8 +35,8 @@ Do not promise pixel-perfect extraction from a single flattened screenshot. A sc
    - `engine_text_or_shape`: use engine-rendered text or simple code-native shapes instead of bitmap text.
 
 4. Generate or extract.
-   - If using image generation, load and follow the `imagegen` skill. Use built-in `image_gen` first.
-   - For transparent assets, follow the `imagegen` skill's chroma-key plus local alpha-removal workflow. Do not switch to true/native transparency CLI fallback unless the user explicitly confirms it.
+   - If using image generation, load and follow the `game_asset_imagegen` skill. Use built-in `image_gen` first.
+   - For transparent assets, follow the `game_asset_imagegen` skill's chroma-key plus local alpha-removal workflow. Do not switch to true/native transparency CLI fallback unless the user explicitly confirms it.
    - Use sprite sheets for small related assets with shared style and enough spacing: gems, item icons, button frames, small characters, animation frames.
    - Generate large layers separately: full backgrounds, parallax buildings, platforms, fog, light shafts, foreground occluders.
    - For generated sprite sheets, require flat background or transparent-ready output, explicit cell layout, no overlap, generous gutters, and no labels/text inside cells unless intentionally baked.

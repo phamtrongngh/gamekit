@@ -1,0 +1,23 @@
+{
+  "skill_name": "tripo3d-game-assets",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I need a game-ready low-poly GLB of a stylized magic anvil for a mobile crafting game. Use Tripo if possible. Keep it under about 8k faces, include PBR texture, and save a manifest with the payload and task id.",
+      "expected_output": "Chooses text_to_model P1 or H3 plus low-poly settings, creates a traceable payload, uses/prescribes TRIPO_API_KEY workflow, downloads GLB/preview outputs, and records a manifest under assets/generated.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I have a character concept PNG and want to turn it into an animated biped for Godot: clean T-pose if needed, generate the model, rig it, add idle/walk/run clips, and export GLB.",
+      "expected_output": "Plans a generate_image t_pose or image_to_model pipeline, runs pre-rig check before rigging, uses animate_rig v2.5 and animate_retarget with up to five animations, exports GLB with animation, and saves task lineage.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Take this existing GLB boss statue, retexture only the horns and armor with a volcanic obsidian material, reduce it for runtime, and export an FBX for Unity.",
+      "expected_output": "Uses import_model for the existing model, segments mesh to get part_names, applies texture_model selectively, runs highpoly_to_lowpoly or conversion face_limit, exports FBX with Unity-friendly texture settings, and avoids unsupported rigged OBJ/STL paths.",
+      "files": []
+    }
+  ]
+}
