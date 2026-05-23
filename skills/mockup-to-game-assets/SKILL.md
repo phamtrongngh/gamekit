@@ -1,6 +1,6 @@
 ---
 name: mockup-to-game-assets
-description: Turn one or more game mockups, UI screenshots, in-game screenshots, sprite sheets, or concept frames into production-ready game asset layers. Use this skill whenever the user asks to extract, split, recreate, slice, or prepare game assets from images, including Vietnamese requests such as "tách asset từ mockup/screenshot game", "phân tách layer", "cắt sprite sheet", "đưa ảnh mockup vào game", or unaccented equivalents like "tach asset tu mockup". It is especially relevant for Godot-ready PNG assets, UI buttons/icons, gems/items, parallax backgrounds, foreground occluders, characters, and animated object sheets. Prefer this skill even when the user only provides a single flattened screenshot.
+description: Turn one or more game mockups, UI screenshots, in-game screenshots, sprite sheets, or concept frames into production-ready game asset layers. Use this skill whenever the user asks to extract, split, recreate, slice, or prepare game assets from images. It is especially relevant for Godot-ready PNG assets, UI buttons/icons, gems/items, parallax backgrounds, foreground occluders, characters, and animated object sheets. Prefer this skill even when the user only provides a single flattened screenshot.
 ---
 
 # Mockup To Game Assets
