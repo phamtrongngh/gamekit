@@ -3,14 +3,14 @@
   "evals": [
     {
       "id": 1,
-      "prompt": "I need a game-ready low-poly GLB of a stylized magic anvil for a mobile crafting game. Use Tripo if possible. Keep it under about 8k faces, include PBR texture, and save a manifest with the payload and task id.",
-      "expected_output": "Chooses text_to_model P1 or H3 plus low-poly settings, creates a traceable payload, uses/prescribes TRIPO_API_KEY workflow, downloads GLB/preview outputs, and records a manifest under assets/generated.",
+      "prompt": "I need a Tripo Smart Mesh / P1 game-ready low-poly GLB of a stylized magic anvil for a mobile crafting game. Keep it under about 8k faces, include PBR texture, and save a manifest with the payload and task id.",
+      "expected_output": "Chooses text_to_model with model_version P1-20260311 as the Smart Mesh API route, sets a face_limit around 8000, creates a traceable payload, uses/prescribes TRIPO_API_KEY workflow, downloads GLB/preview outputs, and records a manifest under assets/generated.",
       "files": []
     },
     {
       "id": 2,
       "prompt": "I have a character concept PNG and want to turn it into an animated biped for Godot: clean T-pose if needed, generate the model, rig it, add idle/walk/run clips, and export GLB.",
-      "expected_output": "Plans a generate_image t_pose or image_to_model pipeline, runs pre-rig check before rigging, uses animate_rig v2.5 and animate_retarget with up to five animations, exports GLB with animation, and saves task lineage.",
+      "expected_output": "Plans a game-asset-imagegen T-pose/reference cleanup step if needed, then image_to_model, runs pre-rig check before rigging, uses animate_rig v2.5 and animate_retarget with up to five animations, exports GLB with animation, and saves task lineage.",
       "files": []
     },
     {

@@ -3,9 +3,11 @@
 All payloads below are submitted to `POST https://api.tripo3d.ai/v2/openapi/task`.
 Save each payload next to the generated asset before submitting it.
 
-## Low-poly prop from text
+Image policy for gamekit: do not use Tripo image-generation tasks. If an input image needs to be created, cleaned, restyled, completed, converted to T-pose, or expanded into multiview references, use `skills/game-asset-imagegen/SKILL.md`, save the image output in the workspace, then upload or reference it in an `image_to_model` or `multiview_to_model` payload.
 
-Use for collectibles, weapons, furniture, small environment props, mobile assets, and drafts where clean topology matters more than maximum detail.
+## Smart Mesh P1 low-poly prop from text
+
+Use for collectibles, weapons, furniture, small environment props, mobile assets, and drafts where clean topology matters more than maximum detail. This is the preferred API route when the user explicitly asks for Smart Mesh, P1, structured topology, or real-time game mesh output.
 
 ```json
 {
@@ -19,6 +21,27 @@ Use for collectibles, weapons, furniture, small environment props, mobile assets
   "auto_size": true,
   "model_seed": 12345,
   "texture_seed": 67890
+}
+```
+
+## H3 direct smart low-poly generation
+
+Use when the user needs H3 prompt fidelity or advanced controls but still wants low-poly hand-crafted topology. Keep the input less complex and set an explicit `face_limit`.
+
+```json
+{
+  "type": "text_to_model",
+  "prompt": "A stylized fantasy blacksmith workstation with an anvil, tools, and warm glowing forge details, readable game prop silhouette, no text",
+  "negative_prompt": "blurry, noisy, watermark, labels, excessive tiny parts",
+  "model_version": "v3.1-20260211",
+  "texture": true,
+  "pbr": true,
+  "geometry_quality": "standard",
+  "texture_quality": "standard",
+  "smart_low_poly": true,
+  "face_limit": 12000,
+  "auto_size": true,
+  "export_uv": true
 }
 ```
 
@@ -66,44 +89,69 @@ Use `object` when you uploaded through STS. Use `file_token` for direct image up
 }
 ```
 
-## Prepare a riggable character reference
+## Prepare a riggable character reference with game-asset-imagegen
 
-Run this before 3D generation when a character is not in a clean rigging pose.
+Run this before 3D generation when a character is not in a clean rigging pose. This is not a Tripo payload; it is prompt guidance for `game-asset-imagegen`.
 
-```json
-{
-  "type": "generate_image",
-  "prompt": "Convert this character into a clean full-body T-pose reference for 3D game rigging. Preserve costume, colors, facial identity, and silhouette. Plain background, no text.",
-  "template": "t_pose",
-  "file": {
-    "type": "png",
-    "url": "https://example.com/character_reference.png"
-  }
-}
+```text
+Use case: reference-guided generation
+Asset type: character reference for 3D model generation
+Primary request: Convert the provided character concept into a clean full-body T-pose or A-pose reference suitable for Tripo image_to_model.
+Input images: Image 1 is the identity/costume reference.
+Composition/framing: full body, front view, symmetrical neutral stance, arms clear of torso, feet visible, centered.
+Transparency/background: plain flat background.
+Constraints: preserve costume, colors, facial identity, proportions, and silhouette. No text, labels, logo, watermark, or cropped limbs.
 ```
 
-Then use the generated image URL in `image_to_model`.
+Save the final PNG under the asset pack, upload/reference it, then use it in `image_to_model`.
 
-## Generate multiview images, then model
+## Multiview references from game-asset-imagegen, then model
 
-Step 1: generate multiview references.
+Step 1: use `game-asset-imagegen` to create or clean a four-view turnaround. This is not a Tripo image-generation task.
 
-```json
-{
-  "type": "generate_multiview_image",
-  "file": {
-    "type": "png",
-    "url": "https://example.com/front_reference.png"
-  }
-}
+```text
+Use case: reference-guided generation
+Asset type: four-view turnaround sheet for 3D model generation
+Primary request: Create front, left, back, and right orthographic views of the same asset for Tripo multiview_to_model.
+Composition/framing: four separate clean images or a clearly separable 4-cell sheet, consistent scale, consistent lighting, neutral pose.
+Constraints: preserve identity across views. No perspective camera, labels, text, shadows crossing cells, decorative borders, logo, or watermark.
 ```
 
-Step 2: model from the multiview task output.
+Step 2: upload/reference the resulting front/left/back/right images, then model from direct file inputs.
 
 ```json
 {
   "type": "multiview_to_model",
-  "original_task_id": "<generate_multiview_image_task_id>",
+  "files": [
+    {
+      "type": "png",
+      "object": {
+        "bucket": "tripo-data",
+        "key": "uploads/asset_front.png"
+      }
+    },
+    {
+      "type": "png",
+      "object": {
+        "bucket": "tripo-data",
+        "key": "uploads/asset_left.png"
+      }
+    },
+    {
+      "type": "png",
+      "object": {
+        "bucket": "tripo-data",
+        "key": "uploads/asset_back.png"
+      }
+    },
+    {
+      "type": "png",
+      "object": {
+        "bucket": "tripo-data",
+        "key": "uploads/asset_right.png"
+      }
+    }
+  ],
   "model_version": "v3.1-20260211",
   "texture": true,
   "pbr": true,

@@ -1,6 +1,8 @@
 # Tripo3D API Notes
 
-These notes summarize the official Tripo OpenAPI docs researched on 2026-05-23. If an API response contradicts this file, re-open the current docs and update the skill.
+These notes summarize the official Tripo OpenAPI docs checked on 2026-05-24. If an API response contradicts this file, re-open the current docs and update the skill.
+
+Gamekit policy: Tripo image-generation and image-editing APIs are documented here only for awareness. Do not use `text_to_image`, `generate_image`, `generate_multiview_image`, or `edit_multiview_image` in this repository workflow. Use `skills/game-asset-imagegen/SKILL.md` for raster reference images, then pass the saved image files to Tripo 3D tasks.
 
 ## Base request model
 
@@ -32,12 +34,7 @@ Common output fields include:
 - `model`
 - `base_model`
 - `pbr_model`
-- `generated_image`
 - `rendered_image`
-- `generate_multiview_image.front_view_url`
-- `generate_multiview_image.left_view_url`
-- `generate_multiview_image.back_view_url`
-- `generate_multiview_image.right_view_url`
 
 The docs say result download URLs expire quickly, typically after five minutes. Download immediately after success.
 
@@ -53,19 +50,19 @@ The docs say result download URLs expire quickly, typically after five minutes. 
 
 | Need | Task type | Current preferred version | Notes |
 | --- | --- | --- | --- |
-| Basic image from text | `text_to_image` | versionless | Cheap draft image generation. |
-| Advanced image/reference edit | `generate_image` | default or explicit image model | Supports templates such as `asset_extraction`, `character_completion`, `t_pose`, `head_extraction`, `3d_enhance`, `variants`, `print_clay`, `figure`. |
-| Generate four views from one image | `generate_multiview_image` | versionless | Concurrency limit is low; use before `multiview_to_model`. |
-| Edit generated views | `edit_multiview_image` | versionless | Edits view-specific prompts: `front`, `left`, `back`, `right`. |
-| Text to 3D low-poly | `text_to_model` | `P1-20260311` | Stronger low-poly topology; `face_limit` range 48-20000. |
+| Basic image from text | `text_to_image` | Do not use in gamekit | Use `game-asset-imagegen` instead. |
+| Advanced image/reference edit | `generate_image` | Do not use in gamekit | Use `game-asset-imagegen` instead, including T-pose/reference cleanup. |
+| Generate four views from one image | `generate_multiview_image` | Do not use in gamekit | Use `game-asset-imagegen` for multiview references, then `multiview_to_model`. |
+| Edit generated views | `edit_multiview_image` | Do not use in gamekit | Use `game-asset-imagegen` instead. |
+| Smart Mesh text to 3D | `text_to_model` | `P1-20260311` | P1.0 Smart Mesh model for structured low-poly topology; `face_limit` range 48-20000. |
 | Text to 3D high fidelity | `text_to_model` | `v3.1-20260211` or `v3.0-20250812` | H3 line with advanced geometry and texture controls. |
-| Single image to 3D | `image_to_model` | P1 or H3 | H3 for fidelity, P1 for low-poly structured mesh. |
-| Multiview to 3D | `multiview_to_model` | P1 or H3 | File order is `[front, left, back, right]`; front required; at least two views. |
+| Single image to 3D | `image_to_model` | P1 or H3 | H3 for fidelity, Smart Mesh P1 for low-poly structured mesh. |
+| Multiview to 3D | `multiview_to_model` | P1 or H3 | File order is `[front, left, back, right]`; front required; at least two views; P1 gives Smart Mesh output. |
 | Existing model into pipeline | `import_model` | versionless | Use for downstream texture, mesh editing, animation, conversion. |
 | Re-texture/PBR | `texture_model` | `v3.0-20250812` | Previous model task must be Turbo-v1.0 or over v2.0 generation. |
 | Segment mesh into parts | `mesh_segmentation` | `v1.0-20250506` | Produces part names for selective workflows. |
 | Complete segmented mesh | `mesh_completion` | `v1.0-20250506` on linked page; overview advertises newer P-v2 | Run after segmentation; verify current docs before selecting P-v2. |
-| Smart low-poly | `highpoly_to_lowpoly` | `P-v2.0-20251225` | Face limit 500-20000; 500-10000 for quad. |
+| Smart low-poly postprocess | `highpoly_to_lowpoly` | `P-v2.0-20251225` | For existing/generated models; face limit 500-20000, or 500-10000 for quad. |
 | Pre-rig validation | `animate_prerigcheck` | v2 current | Returns `riggable` and `rig_type`. |
 | Auto rig | `animate_rig` | `v2.5-20260210` | `out_format` is `glb` or `fbx`; `spec` is `tripo` or `mixamo`. |
 | Retarget animation | `animate_retarget` | versionless | Preset motions; one `animation` or up to five `animations`. |
@@ -82,7 +79,8 @@ Generation:
 - `pbr`: default `true`; if `true`, texture is effectively enabled.
 - `texture_quality`: `standard` or `detailed`; detailed costs more.
 - `geometry_quality`: `standard` or `detailed` in H3.
-- `smart_low_poly`: H3 direct low-poly generation; better for less complex inputs.
+- `model_version=P1-20260311`: Tripo P1.0 Smart Mesh route for clean structured low-poly generation on text, image, and multiview model tasks.
+- `smart_low_poly`: H3 direct low-poly generation with hand-crafted topology; better for less complex inputs. Use when H3 fidelity/controls matter more than defaulting to P1.
 - `quad`: enables quad output and forces FBX in H3 generation.
 - `generate_parts`: creates segmented editable parts, but is incompatible with texture/PBR/quad.
 - `auto_size`: real-world scaling in meters; only for textured models.
@@ -118,9 +116,18 @@ Tripo uses concurrency limits by task group, not just raw task type.
 - Other text/image/multiview model generation: 10 concurrent tasks.
 - `refine_model`: 5 concurrent tasks.
 - Animation tasks: 10 concurrent tasks.
-- `generate_multiview_image` and `edit_multiview_image`: 1 concurrent task.
 - Other task types: 10 concurrent tasks.
 - Image upload has a 10 QPS limit.
+
+## Smart Mesh support
+
+The public Smart Mesh marketing page and blog describe Tripo Smart Mesh P1.0 as clean, structured low-poly topology for game/XR/interactive assets. The blog originally said API access would be available soon, but the current OpenAPI changelog confirms API support: version 1.9.5 released `P1-20260311` as a Smart Mesh model for structured mesh generation, optimized for clean topology, fast mesh generation, and real-time production workflows.
+
+Use this interpretation in gamekit:
+
+- User says "Smart Mesh", "P1", "P1.0", "clean topology", "game-ready low poly", or "structured mesh": prefer P1 `model_version="P1-20260311"` in `text_to_model`, `image_to_model`, or `multiview_to_model`.
+- User has a high-poly or imported existing model and asks to reduce/remesh it: use `highpoly_to_lowpoly` with `model_version="P-v2.0-20251225"`.
+- User wants H3 fidelity and still asks for low-poly topology: use H3 with `smart_low_poly=true` and a `face_limit`.
 
 When the API returns code `2000` or HTTP 429, use the `Retry-After` header when present and exponential backoff otherwise.
 
