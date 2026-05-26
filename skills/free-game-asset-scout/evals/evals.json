@@ -1,0 +1,23 @@
+{
+  "skill_name": "free-game-asset-scout",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a Godot 3D horror scene reference of a contaminated hospital ward. Search for free hospital/medical props, plastic curtains, stretchers, carts, warning signs, and PBR materials that match the mood. Give me a ranked report only; do not download anything yet.",
+      "expected_output": "Inspects or infers project/style context, searches license-verifiable sources such as Sketchfab, OpenGameArt, Poly Haven, ambientCG, Kenney, Quaternius, and itch.io, produces a ranked table with source URLs, formats, license, score breakdown, verdicts, risks, and Godot import notes, flags any prototype-only/release-blocked assets, and does not download without approval.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Find me a free low-poly humanoid character plus idle/walk/run animations for a Godot prototype. I am okay with prototype-only assets if you clearly mark release risks.",
+      "expected_output": "Targets Quaternius, Mixamo, Kenney, OpenGameArt, Sketchfab, and itch.io as appropriate, verifies rig/animation/license details from original sources, ranks candidates using the 100-point rubric, caps non-commercial or ambiguous licenses at prototype_only with release_blocker warnings, includes Godot retargeting/import notes, and asks for explicit approval before download.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Search for CC0 PBR materials and stylized 3D props for a Godot project. Prioritize GLB/GLTF, Poly Haven, ambientCG, Kenney, and Quaternius. Include attribution/license manifest details for anything you recommend.",
+      "expected_output": "Prioritizes CC0/provenance-safe sources, separates PBR materials from props, scores candidates for style, Godot compatibility, material/mesh quality, and integration cost, includes license and attribution fields suitable for third_party_asset_manifest.json, gives download paths only as proposed locations, and does not download during the scout report.",
+      "files": []
+    }
+  ]
+}
