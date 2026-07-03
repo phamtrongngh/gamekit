@@ -1,6 +1,6 @@
 ---
 name: game-environment-builder
-description: Build or improve 3D game environments and scenes from reference images while matching composition, camera view, object placement, mood, and available assets. Use this skill whenever the user asks to recreate a game scene/environment from images, make a Godot/Unity/Unreal scene look like references, achieve high visual similarity. This skill is especially important for scene construction with provided 3D assets, water/terrain/materials, camera POV, and iterative visual QA.
+description: Build or improve 3D game environments and scenes from reference images while matching composition, camera view, object placement, mood, and available assets. Use this skill whenever the user asks to recreate a game scene/environment from images, make a Godot scene look like references, achieve high visual similarity. This skill is especially important for scene construction with provided 3D assets, world materials (terrain, interiors, water when present), camera POV, and iterative visual QA.
 ---
 
 # Game Environment Builder
@@ -13,7 +13,7 @@ The main failure mode to avoid is "asset dumping": placing the right models with
 
 Work from the camera outward.
 
-For a reference-matched scene, the player's or screenshot camera is the truth. Aerial organization matters, but only after the target view reads correctly. Always identify what the user will see in the first frame: object sizes in screen space, horizon height, near-camera props, left/right bank placement, focal object distance, and atmospheric depth.
+For a reference-matched scene, the player's or screenshot camera is the truth. Aerial organization matters, but only after the target view reads correctly. Always identify what the user will see in the first frame: object sizes in screen space, horizon or ceiling line height, near-camera props, left/right framing (banks, walls, streets, cliffs), focal object distance, and atmospheric depth.
 
 ## Workflow
 
@@ -22,11 +22,11 @@ For a reference-matched scene, the player's or screenshot camera is the truth. A
 Before editing, write a compact visual brief for yourself:
 
 - Target camera: first-person, third-person, top-down, side view, cinematic, editor view, or multiple required views.
-- Foreground anchors: objects touching the bottom/edges of the frame, cockpit/vehicle parts, hands/tools, nearby vegetation, shoreline, walls.
-- Midground anchors: hero structure/vehicle/enemy, crossing object, bridge, road bend, dock, crowd, signs.
-- Background anchors: skyline, tree line, mountains, fog, far buildings, clouds, river/road vanishing direction.
+- Foreground anchors: objects touching the bottom/edges of the frame, cockpit/vehicle parts, hands/tools, nearby props, vegetation, railings, door frames, shoreline or street curb when visible.
+- Midground anchors: hero structure/vehicle/enemy/NPC, crossing object, intersection, archway, platform, crowd, signs, focal furniture.
+- Background anchors: skyline, tree line, mountains, interior depth, fog, far buildings, clouds, vanishing corridor or road direction.
 - Scene density: approximate counts and clusters, not just asset categories.
-- Palette and material read: water color, mud/stone/grass tone, sky brightness, fog color, contrast, saturation.
+- Palette and material read: dominant surface tones (floor, walls, ground, water if any), sky or ambient fill, fog color, contrast, saturation.
 - Missing details: details in the reference that are not in the asset pack and must be approximated with primitives, labels, decals, particles, or simple kitbash geometry.
 
 If there are multiple references, assign each a purpose:
@@ -44,50 +44,71 @@ Inspect before building:
 - Existing gameplay controller and project main scene.
 - Asset dimensions and orientation.
 
-For GLB/GLTF assets, measure bounding boxes rather than guessing. If using Godot, a headless script or editor preview scene can report AABBs and child mesh names. Convert normalized asset dimensions into plausible world scales:
+For GLB/GLTF assets, measure bounding boxes rather than guessing. Use the project's engine (Godot): a headless script, editor preview scene, or import preview can report AABBs and child mesh names. In Godot, a small inspection script or preview scene is a common approach. Convert normalized asset dimensions into plausible world scales.
 
-- Small boat/canoe: usually 4-8 meters long.
-- Ferry/large boat: often 15-30 meters long.
-- Stilt house/shop: usually 6-12 meters wide/deep.
-- Palm/coconut tree: often 10-18 meters tall.
+Use universal anchors first, then genre-specific sizes only when the reference and assets call for them:
 
-Also inspect orientation. Do not assume the model's "front" points along the engine's conventional forward axis. Take preview screenshots from known azimuths when the bow/front/sign direction matters.
+- Human-scale: standing character ~1.6-1.9 m; eye height ~1.5-1.7 m for first-person.
+- Architecture: door ~2-2.2 m tall; single-story wall ~2.5-3.5 m; typical room depth often 3-8 m depending on type.
+- Vehicles: compact car ~4 m long; truck/bus proportionally larger; player vehicle sized to reference screen footprint.
+
+When the reference shows waterways, villages, or tropical outdoor scenes, examples include: small boat/canoe ~4-8 m; ferry/large boat ~15-30 m; stilt house or shop ~6-12 m wide/deep; palm or tall street tree ~10-18 m. Do not apply these defaults to sci-fi interiors, dungeons, or arenas unless the reference matches.
+
+Also inspect orientation. Do not assume the model's "front" points along the engine's conventional forward axis. Take preview screenshots from known azimuths when facing direction (vehicle bow, door, sign, weapon barrel) matters.
 
 ### 3. Plan The Layout In Camera Coordinates
 
 Define a simple world model:
 
-- Choose the main axis of travel or depth, such as river/road along `Z`.
+- Choose the main axis of travel or depth (corridor, road, river, runway) along a consistent world axis such as `Z`.
 - Place the player or target camera first.
 - Place the hero foreground object second, so it occupies the same screen area as the reference.
 - Place the main midground object next at an approximate distance and lateral offset.
-- Place banks, terrain strips, walls, or path edges to frame the scene.
+- Place framing edges: banks, terrain strips, walls, aisles, or path borders that match the reference silhouette.
 - Place repeated background objects in rows or clusters that recede into fog or perspective.
 
 Use a spatial plan with approximate coordinates before authoring dozens of nodes. Include scale, rotation, and why each key object sits there.
 
-Example planning notes:
+Example planning notes (pick the shape that matches the reference; do not default to outdoor water scenes):
 
 ```text
-Camera: stern POV, y=1.7m, looking down river along -Z, slight downward pitch.
-Foreground: player boat hull and engine fill lower 25% of frame.
-Midground: ferry 25-35m ahead-left, angled across river.
-Left bank: nearest shop/stilt house visible at screen-left, trees behind.
-Right bank: houses and palms farther back, lower contrast through fog.
-Water: wide muddy river, but banks visible enough to define corridor.
+Outdoor / travel corridor:
+Camera: [POV type], y=[eye height]m, looking along [axis], pitch [degrees].
+Foreground: [player vehicle or hands/props] fill lower [~]% of frame.
+Midground: [hero object] [distance]m ahead-[left/right], yaw [degrees].
+Left frame: [nearest landmark] at screen-left; [cluster] behind.
+Right frame: [farther cluster], lower contrast through fog if reference shows depth haze.
+Ground/sky read: [corridor width, material identity — river, road, plaza, etc.].
+```
+
+```text
+Interior / structured space:
+Camera: third-person behind player, y=1.6m, looking down main aisle along +Z.
+Foreground: player shoulders and weapon occupy lower-center ~20% of frame.
+Midground: enemy or desk cluster 8-12m ahead, slightly right.
+Left frame: wall modules, windows, or shelves to match reference vertical rhythm.
+Right frame: doorway or lit alcove for contrast.
+Materials: floor and wall tones match reference screenshot, not engine defaults.
 ```
 
 ### 4. Build Missing Recognition Details
 
-Do not stop because a perfect asset is missing. A scene often becomes recognizable through cheap high-signal details:
+Do not stop because a perfect asset is missing. A scene often becomes recognizable through cheap, genre-dependent high-signal details. Prefer primitives, labels, decals, and simple meshes that read at screenshot scale.
 
-- People at distance: capsules/spheres plus cone hats or simple colored bodies.
-- Boat engines: boxes, cylinders, flywheels, exhaust pipes, rods, handles.
-- Power lines: thin cylinders/boxes between poles.
-- Docks: planks, posts, ramps.
-- Shop signs: `Label3D`, textured quads, or simple panels.
-- Tires, ropes, railings, paddles: torus/cylinders/boxes.
-- Haze/clouds: environment fog and procedural sky if no sky texture exists.
+Generic (most scenes):
+
+- Signs and text: engine text labels (e.g. Godot `Label3D`), textured quads, emissive panels.
+- Crowds at distance: capsules/spheres with simple color blocks for clothing or uniforms.
+- Railings, pipes, cables: thin cylinders/boxes between posts or along walls.
+- Lights: emissive quads, point/spot placeholders, neon strips.
+- Crates, tires, ropes, handles: boxes, torus, cylinders.
+- Atmosphere: fog, procedural sky, particle haze when no sky texture exists.
+
+Optional when the reference shows outdoor village or water travel:
+
+- Regional costume silhouettes only if visible in the reference (hats, umbrellas, etc.).
+- Boat engines, docks, paddles: boxes, cylinders, planks, posts.
+- Overhead power lines between poles.
 
 Kitbash these details where they appear in the camera, especially foreground and midground. Far objects need silhouette and color more than mesh fidelity.
 
@@ -95,27 +116,27 @@ Kitbash these details where they appear in the camera, especially foreground and
 
 For scenes with many repeated objects, prefer a deterministic generator script or structured scene authoring over dozens of manual editor calls. A generator is useful when it:
 
-- Computes transforms for repeated houses, trees, wires, passengers, boats, or props.
+- Computes transforms for repeated instances (props, trees, modules, NPC placeholders, vehicles).
 - Uses a fixed seed for natural variation.
 - Keeps constants near the top for fast iteration.
-- Groups objects into meaningful nodes such as `River`, `Banks`, `Village`, `Boats`, `PowerLines`, `PlayerBoat`.
+- Groups objects into meaningful nodes named by scene semantics (e.g. `Terrain`, `Props`, `Lighting`, `HeroVehicle`, or for a river scene `River`, `Banks`, `Village`).
 - Produces final authored nodes that remain inspectable in the editor.
 
 Keep the generator temporary unless the project convention says otherwise. If you remove it at the end, make sure the final scene file contains the complete authored result.
 
-When editing Godot `.tscn` directly, verify the scene reloads in the editor and through headless Godot. Be alert for stale in-memory editor state: an editor can show or autosave an older scene after disk edits. If screenshots show old node paths or old content, force a reload or restart the editor before running more visual QA.
+When editing scene files on disk (e.g. Godot `.tscn`), verify the scene reloads in the editor and through the engine's headless or batch load path. Be alert for stale in-memory editor state: an editor can show or autosave an older scene after disk edits. If screenshots show old node paths or old content, force a reload or restart the editor before running more visual QA.
 
 ### 6. Treat Atmosphere And Materials As Core Scene Objects
 
 Reference similarity often depends as much on color and atmosphere as geometry. Tune these deliberately:
 
-- Water hue and roughness: avoid default blue or over-bright yellow if the reference shows muddy, reflective, or dark water.
+- Dominant surfaces: floors, walls, ground, and water (if present) should match the reference hue, roughness, and reflectivity — avoid engine defaults that fight the screenshot.
 - Fog density/color: use enough to create depth, not enough to wash out all assets.
-- Sky/clouds: overcast, tropical haze, sunset, noon, night, etc.
-- Ambient and directional light: reduce washed-out scenes by lowering ambient energy or changing tonemap before adding more geometry.
-- Terrain/bank color: shore materials should support the scene palette and not read as unrelated slabs.
+- Sky or ambient fill: overcast, interior bounce, tropical haze, sunset, noon, night, studio rim light — match what the reference shows.
+- Ambient and directional light: reduce washed-out scenes by lowering ambient energy or changing tonemap/exposure before adding more geometry.
+- Framing terrain or architecture: edge materials (banks, curbs, baseboards, trim) should support the palette and not read as unrelated slabs.
 
-Iterate material values from screenshots, not from numeric preference. If a surface reads as sand when it should read as water, darken and desaturate the material, adjust reflections/roughness, and retest from the target camera.
+Iterate material values from screenshots, not from numeric preference. If a surface reads wrong (e.g. sand instead of water, plastic instead of concrete), adjust albedo, roughness, and reflections, then retest from the target camera.
 
 ### 7. Screenshot, Compare, Fix
 
@@ -139,7 +160,7 @@ Use at least:
 - One editor/aerial or oblique screenshot to inspect layout, overlaps, and density.
 - Another target screenshot after major material/camera/layout changes.
 
-For a high-similarity request such as "1:1" or ">=80%", expect several visual loops. It is normal to fix camera height, object yaw, water color, fog, foreground prop size, and hero-object position after seeing screenshots.
+For a high-similarity request such as "1:1" or ">=80%", expect several visual loops. It is normal to fix camera height, object yaw, key surface materials, fog, foreground prop size, and hero-object position after seeing screenshots.
 
 ### 8. Validate And Clean Up
 
@@ -152,7 +173,7 @@ Before reporting completion:
 - Leave useful generated materials, shaders, scripts, and final scenes.
 - Summarize what was changed in concrete counts and named nodes.
 
-For Godot, useful checks include:
+Use whatever headless load or play-mode smoke test the project already supports. For Godot projects, useful checks include:
 
 ```bash
 godot --headless --path <project> --quit
@@ -167,7 +188,7 @@ Use this checklist before finalizing:
 - Foreground elements occupy similar screen area.
 - Hero object position, scale, and yaw match the reference.
 - Major left/right/background objects are in the same relative locations.
-- Scene density is comparable: not just one house/tree/boat where the reference has many.
+- Scene density is comparable: not a single instance where the reference shows many (trees, crates, NPCs, modules, etc.).
 - Repeated objects have variation but preserve the overall pattern.
 - Missing asset details are approximated with primitives or labels when visually important.
 - Material palette matches the reference at screenshot level.
@@ -181,7 +202,7 @@ Use this checklist before finalizing:
 - Assuming model orientation without checking.
 - Treating material and fog as polish instead of identity.
 - Adding many objects but missing the reference's foreground or focal object.
-- Skipping cheap details such as passengers, wires, signs, docks, or handles because no exact model exists.
+- Skipping cheap high-signal kitbash (signs, lights, crowds, cables, handles) because no exact model exists.
 - Trusting the editor after direct file edits without forcing reload.
 - Running once and stopping without screenshot-driven iteration.
 
