@@ -1,0 +1,4 @@
+interface:
+  display_name: "Preparing 2D Rig Assets"
+  short_description: "Tách concept thành layer 2D sẵn sàng rig"
+  default_prompt: "Use $preparing-2d-rig-assets to turn this character concept into a production-ready neutral 2D rig asset pack."

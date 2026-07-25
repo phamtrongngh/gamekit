@@ -1,0 +1,84 @@
+{
+  "schema_version": "1.0.0",
+  "character_id": "example_character",
+  "status": "NEEDS_REVIEW",
+  "source_sha256": "",
+  "canvas": {"width": 0, "height": 0},
+  "coordinate_system": {
+    "unit": "pixel",
+    "origin": "top_left",
+    "x_axis": "right",
+    "y_axis": "down"
+  },
+  "parts": [
+    {
+      "id": "core_00",
+      "name": "core",
+      "file": "layers/core/core.png",
+      "semantic_role": "core",
+      "parent_id": null,
+      "chain_id": "core",
+      "chain_index": 0,
+      "side": "center",
+      "instance_index": 0,
+      "z_index": 0,
+      "bbox": [0, 0, 0, 0],
+      "offset": [0, 0],
+      "pivot_local": [0, 0],
+      "pivot_canvas": [0, 0],
+      "attachment_to_parent": null,
+      "deform_safe_region": [],
+      "provenance_mask": "masks/provenance/core.png",
+      "completion_mask": "masks/completion/core.png",
+      "confidence": "high",
+      "warnings": []
+    },
+    {
+      "id": "appendage_00",
+      "name": "appendage_00",
+      "file": "layers/appendages/appendage_00.png",
+      "semantic_role": "appendage",
+      "parent_id": "core_00",
+      "chain_id": "appendage_00",
+      "chain_index": 0,
+      "side": "radial",
+      "instance_index": 0,
+      "z_index": 1,
+      "bbox": [0, 0, 0, 0],
+      "offset": [0, 0],
+      "pivot_local": [0, 0],
+      "pivot_canvas": [0, 0],
+      "attachment_to_parent": [0, 0],
+      "deform_safe_region": [],
+      "provenance_mask": "masks/provenance/appendage_00.png",
+      "completion_mask": "masks/completion/appendage_00.png",
+      "confidence": "low",
+      "warnings": ["Template example is not a validated deliverable."]
+    }
+  ],
+  "joints": [
+    {
+      "id": "core_00__appendage_00",
+      "parent_part_id": "core_00",
+      "child_part_id": "appendage_00",
+      "type": "unknown",
+      "pivot_canvas": [0, 0],
+      "safe_rotation_degrees": [0, 0],
+      "required_coverage_mask": "masks/completion/joint_core_00__appendage_00.png",
+      "confidence": "low",
+      "warnings": ["Template example is not a validated deliverable."]
+    }
+  ],
+  "neutral_pose": {
+    "draw_order": ["core_00", "appendage_00"],
+    "transforms": {
+      "core_00": {"translation": [0, 0], "rotation_degrees": 0, "scale": [1, 1]},
+      "appendage_00": {"translation": [0, 0], "rotation_degrees": 0, "scale": [1, 1]}
+    }
+  },
+  "qa_report": "qa-report.json",
+  "preview_files": {
+    "neutral": "previews/reconstructed-neutral.png",
+    "articulation": "previews/articulation-check.png"
+  }
+}
